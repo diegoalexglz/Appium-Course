@@ -51,7 +51,7 @@ or, XCUITest for ¡os.
    C:\Program Files\Java\jdk-21
    ```
 
-2. Download Android Studio, find out the Android SDK path (when installing) and add it to Environment System Variables.
+2. Download Android Studio (in this case, version 2023.1.1.28), find out the Android SDK path (when installing) and add it to Environment System Variables.
 
    ```bash
    C:\Users\Diego\AppData\Local\Android\Sdk
@@ -161,6 +161,210 @@ Note: Appium server needs to be started before running any test. By default, it 
 > ECLIPSE EDITOR
 >
 
-Understand the Desired Capabilities to setup the Environment in the
-Appium
+Eclipse Editor will be used to write our Appium code.
+
+1. Download 'Eclipse IDE for Java Developers' from the web.
+
+2. Open Eclipse
+
+   The default workspace is:
+
+   ```bash
+   C:\Users\Diego\eclipse-workspaces
+   ```
+
+   
+
+> JAVA CLIENT (FROM MAVEN)
+
+Just like Node NPM helps with packages installation, **Maven repositories host Java libraries**, so, it's quite convenient to setup a maven project, making it easier to pull the libraries we need.
+
+Maven also **manages dependencies** (search, download and organize the libraries we need), automate tasks (build, run tests, generate reports) and **facilitates collaboration** by defining a clear and consistent project model, allowing other developers to work on them without problems.
+
+1. Go to https://mvnrepository.com/
+
+2. Click on '**Java client** for Appium Mobile Webdriver'
+
+   Java-client is the library that allows our Java code to communicate with Appium.
+
+3. Select the latest version available (in this case, version 9.1.0)
+
+   Then, we get the info we need to put on our maven project. In this case:
+
+   ```xml
+   <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
+   <dependency>
+       <groupId>io.appium</groupId>
+       <artifactId>java-client</artifactId>
+       <version>9.1.0</version>
+   </dependency>
+   ```
+
+
+
+
+> FRAMEWORK: TESTNG
+
+Similarly, we'll search for our testing framework. In this case, we'll be using TestNG and not JUnit.
+
+1. Go to https://mvnrepository.com/
+
+2. Click on 'TestNG'
+
+3. Select the latest version available (in this case, version 7.9.0)
+
+   Then, we get the info we need to put on our maven project. In this case:
+
+   ```xml
+   <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+   <dependency>
+       <groupId>org.testng</groupId>
+       <artifactId>testng</artifactId>
+       <version>7.9.0</version>
+       <scope>test</scope>
+   </dependency>
+   ```
+
+
+
+> NEW PROJECT: ECLIPSE + MAVEN
+
+1. Open Eclipse
+
+2. Click on File -> New -> Project -> Maven Project
+
+3. **Select an archetype:** search for 'archetype-quickstart' in the text-box and select the one with the group id 'org.apache.maven.archetypes' (in our case, version 1.4).
+
+   This is a template with a predefined basic structure for general java testing. It includes:
+
+   - A **pom.xml** file with basic Maven dependencies
+
+   - A **src/main/java** directory for the project source code
+
+   - A **src/test/java** directory for the project's unit tests
+
+   - A **target directory** for the compiled and packaged project files
+
+   Archetype-quickstart also includes the basic configuration for unit testing with JUnit.
+
+   The src/test/java directory is configured so that Maven automatically runs unit tests with the *mvn* test command.
+
+4. Fill the required fields with our own info. In this case:
+
+   **GroupID** (kinda the package name): **alex.appium**
+
+   **ArtifactId** (kinda the project name): **project0**
+
+   (so, at the end, our package is alex.appium.project0)
+
+   Note something here. This is very similar to the info we saw from the java-client, and this is because java-client is also a maven project, but made by the appium crew (io.appium, java-client).
+
+5. Click on finish (our project will be opened in a dark eclipse window)
+
+6. Open pom.xml
+
+7. Remove the lines of code of JUnit, because we'll be working with TestNG framework.
+
+   Default JUnit lines of code in pom.xml are these:
+
+   ```xml
+     <dependencies>
+       <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.11</version>
+         <scope>test</scope>
+       </dependency>
+     </dependencies>
+   ```
+
+8. Add the lines of code of **Java-Client and TestNG** framework **into the pom.xml** file:
+
+   ```xml
+     <dependencies>
+       <dependency>
+         <groupId>io.appium</groupId>
+         <artifactId>java-client</artifactId>
+         <version>9.1.0</version>
+         <scope>test</scope>
+       </dependency>
+       <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <version>7.9.0</version>
+         <scope>test</scope>
+       </dependency>
+     </dependencies>
+   ```
+
+   
+
+9. Delete the AppTest.java files that come by default in ../main/java and ../test/java folders, as they are just examples.
+
+10. **Install TestNG Plugin for eclipse**: click on Help -> Eclipse Marketplace -> TestNG for eclipse -> Install
+
+10. **TIP:** Verify that the 'Build automatically' option in Tools is checked, so there's a scan for problems everytime we modify and save a file. | This scan can also be done by right-clicking the name of our project and clicking on Maven -> Update project.
+
+Now, in 'Maven Dependencies' at the left panel, we can see all the jars that both java-client and testng have automatically downloaded for us.
+
+
+
+# Core Java basics for automation
+
+### Variables and Data Types
+
+> CREATE A CLASS
+
+1. Right-click on **src** icon in eclipse's left panel -> new -> class
+
+2. Name it. e.g. 'BrushUp1'
+
+3. ✅ 'public static void main(String[] args)' below 'Which method stubs would you like to create'
+
+   This will come up:
+
+   ```java
+   package alex.appium.project0;
+   
+   public class BrushUp1 {
+   
+   	public static void main(String[] args) {
+   		// TODO Auto-generated method stub
+   	}
+   }
+   ```
+
+   The whole execution will take place inside of the main block, which is inside the  ...args){	} brackets. Any code outside that block won't be executed.
+
+4. s
+
+
+
+s
+
+# Arrays
+
+
+
+# Loops and Conditions
+
+
+
+# Strings
+
+
+
+# Arrays lists
+
+
+
+### Array lists operations and conversion of array to list
+
+
+
+# Declaring Methods
+
+
+
+# Accessing Methods in class and Static keyword
 
