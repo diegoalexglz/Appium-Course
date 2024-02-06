@@ -13,7 +13,7 @@ FTools -> Emulator -> Uncheck “Launch in a tool window”.
 
 
 
-# INTRODUCTION
+# BASICS
 
 ### Definition
 
@@ -41,9 +41,11 @@ Appium is a automation tool for native apps (android, ios) and mobile browsers. 
 
 or, XCUITest for ¡os.
 
-### Installation and Config
 
-> DOWNLOADS AND ENV VARIABLES
+
+# INSTALLATION
+
+### Downloads and environmental variables
 
 1. Download Java and add it to Environment System Variables.
 
@@ -93,8 +95,7 @@ or, XCUITest for ¡os.
 
    
 
-> ANDROID STUDIO AND VIRTUAL DEVICE (EMULATOR)
->
+### Android Studio and AVD
 
 1. Open AS
 
@@ -114,7 +115,9 @@ or, XCUITest for ¡os.
 
 8. Start the device (we'll see the phone)
 
-> APPIUM SERVER
+
+
+### Appium Server
 
 Note: Appium server needs to be started before running any test. By default, it is connected to 4723 port.
 
@@ -158,8 +161,7 @@ Note: Appium server needs to be started before running any test. By default, it 
 
    
 
-> ECLIPSE EDITOR
->
+### Eclipse Editor
 
 Eclipse Editor will be used to write our Appium code.
 
@@ -175,7 +177,7 @@ Eclipse Editor will be used to write our Appium code.
 
    
 
-> JAVA CLIENT (FROM MAVEN)
+### Java Client (from Maven)
 
 Just like Node NPM helps with packages installation, **Maven repositories host Java libraries**, so, it's quite convenient to setup a maven project, making it easier to pull the libraries we need.
 
@@ -202,8 +204,7 @@ Maven also **manages dependencies** (search, download and organize the libraries
 
 
 
-
-> FRAMEWORK: TESTNG
+### Framework: TestNG
 
 Similarly, we'll search for our testing framework. In this case, we'll be using TestNG and not JUnit.
 
@@ -227,7 +228,7 @@ Similarly, we'll search for our testing framework. In this case, we'll be using 
 
 
 
-> NEW PROJECT: ECLIPSE + MAVEN
+### New Project: Eclipse + Maven
 
 1. Open Eclipse
 
@@ -251,9 +252,9 @@ Similarly, we'll search for our testing framework. In this case, we'll be using 
 
 4. Fill the required fields with our own info. In this case:
 
-   **GroupID** (kinda the package name): **alex.appium**
+   **GroupID** (kinda the package name, or the company's name): **alex.appium**
 
-   **ArtifactId** (kinda the project name): **project0**
+   **ArtifactId** (kinda the project name, or the feature's name): **project0**
 
    (so, at the end, our package is alex.appium.project0)
 
@@ -303,15 +304,15 @@ Similarly, we'll search for our testing framework. In this case, we'll be using 
 
 10. **Install TestNG Plugin for eclipse**: click on Help -> Eclipse Marketplace -> TestNG for eclipse -> Install
 
-10. **TIP:** Verify that the 'Build automatically' option in Tools is checked, so there's a scan for problems everytime we modify and save a file. | This scan can also be done by right-clicking the name of our project and clicking on Maven -> Update project.
+11. **TIP:** Verify that the 'Build automatically' option in Tools is checked, so there's a scan for problems everytime we modify and save a file. | This scan can also be done by right-clicking the name of our project and clicking on Maven -> Update project.
 
 Now, in 'Maven Dependencies' at the left panel, we can see all the jars that both java-client and testng have automatically downloaded for us.
 
 
 
-# Core Java basics for automation
+# Core Java basics for automation (in Eclipse)
 
-### Variables and Data Types
+### Classes
 
 > CREATE A CLASS
 
@@ -334,37 +335,545 @@ Now, in 'Maven Dependencies' at the left panel, we can see all the jars that bot
    }
    ```
 
-   The whole execution will take place inside of the main block, which is inside the  ...args){	} brackets. Any code outside that block won't be executed.
+   The whole execution will take place inside of the main block, which is inside the  `...args){	}` brackets. Any code outside that block won't be executed.
 
-4. s
+
+
+### Variables and Data Types
+
+> DEFINE A VARIABLE
+
+Any variable needs a type when defined. For example:
+
+```java
+int myNum = 5;
+float myFloat = 5.5;
+
+char myChar = 'A';
+String myName = "Alex";
+
+boolean myBool = true;
+```
+
+
+
+> PRINT A VARIABLE
+
+We use:
+
+```java
+System.out.println(myNum);
+```
+
+So, the complete example would be:
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+		int myNum = 5;
+        System.out.println(myNum);
+	}
+}
+```
+
+We can run it with:
+
+​					Run as Java Application
+
+------------------------------   **ALT SHIFT X, J**   ------------------------------
+
+
+
+and see the result in the console, at the bottom.
+
+
+
+> PRINT FORMATTED: CONCATENATE INT AND STRING
+
+We use `+` to concatenate int and string values.
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+		int myNum = 5;
+        System.out.println(myNum + " is the value stored in myNum");
+	}
+}
+```
+
+
+
+### Arrays
+
+> INITIALIZE AN ARRAY
+
+`[]` and `new` are used to initialize an array.
+
+```java
+int[] myArray = new int[3];			// array which can store 5 values
+```
+
+> ASSIGN VALUES TO AN ARRAY
+
+Values are assigned starting from zero (0) index.
+
+```java
+myArray[0] = 10;
+myArray[1] = 20;
+myArray[2] = 30;
+```
+
+> DEFINE AND ASSIGN VALUES FROM THE START TO AN ARRAY
+
+`{}` are used if we're assigning values from the start to an array.
+
+```java
+int[] myIntArray = {10, 20, 30};
+String[] myStringArray = {"Alex", "Alvarez"};
+```
+
+
+
+### For loops
+
+> FOR LOOP: ITERATE OVER AN ARRAY
+
+we can use `.length` to iterate over all the elements of an array.
+
+```java
+for(int i=0; i<myIntArray.length; i++){
+    System.out.println(myIntArray[i]);
+}
+```
+
+> ENHANCED FOR LOOP: ITERATE OVER AN ARRAY
+
+```java
+for(int i: myIntArray){					// similar to python syntax (for i in myVar)
+    System.out.println(i);
+}
+```
+
+
+
+### Conditions
+
+> FOR, IF & MODULE: RETRIEVE EVEN NUMBERS
+
+```java
+int[] oneToTen = {1,2,3,4,5,6,7,8,9,10};
+
+for(int i: oneToTen){							// i starts in 0 index
+    if(i % 2 == 0){
+        System.out.println(i);
+    }
+}
+```
+
+
+
+### Arrays lists
+
+A problem that comes implicitly with the classic initialize-later-assign arrays is that the array's **memory allocation** has to be set when defined, so the size of the array is fixed since the beginning. 
+
+> DECLARATION
+
+So, here comes the concept of array lists, which are kinda '**dynamic arrays**', and are declared as follows:
+
+```java
+ArrayList<String> myArrayList = new ArrayList<>();
+```
+
+> IMPORT CLASS
+
+Note that an ArrayList is a Java Class, and any variable we create that belongs to that type, like **myArrayList**, is known as an **object of the class**.
+
+We can notice this because the reserved word 'ArrayList' is underlined like this <u>ArrayList</u>, and if we click on 'Quick fix' we'll be suggested to import **java.util.ArrayList**.
+
+ArrayList is a class, while java.util is a collection of classes.
+
+```java
+package alex.appium.project0;
+
+import java.util.ArrayList; 
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+		ArrayList<String> myArrayList = new ArrayList<>();
+	}
+}
+```
+
+
+
+> ASSIGN VALUES
+
+The way to assign values to an array list is using `add`. Notice that add is known as a **method** of the object.
+
+```java
+// object.method
+myArrayList.add("Alex")
+myArrayList.add("Alvarez")
+```
+
+There are many methods, like .remove() or .clear() and this is an advantage of Eclipse, because as we are typing, it is giving us suggestions of the existing methods we could use.
+
+
+
+> ACCESS AN ELEMENT
+
+We use the `get` method.
+
+```java
+myArrayList.get(0)
+```
+
+
+
+### Strings and methods
+
+> STRINGS AS OBJECTS: STRING LITERALS
+
+Let's clarify something. **A string is algo an object**, which can be declared as:
+
+```java
+String myString = "Alex";
+```
+
+So, **if there are two variables which are equal** (they both have the same content), like if we had
+
+```java
+String myString1 = "Alex";
+String myString2 = "Alex";
+```
+
+then, in that case, **Java won't create a new object, but** instead it will fast-check if that specific string is present in an existing variable and if it is, **it will point the second variable to the first**. When declaring strings this way, they're known as string literals.
+
+
+
+> MAKING SURE EVERY STRING IS A NEW OBJECT
+
+To ensure that every string we create is a new object, regardless of repeated contents, we can use `new` and `()`.
+
+```java
+String myString1 = new String("Alex");
+String myString2 = new String("Alex");
+```
+
+
+
+So, we can make this statement:
+
+-- *A String isn't a sequence of characters, a String is an object that represents a sequence of characters.* --
+
+
+
+> SPLIT METHOD
+
+It is used along with an Array to split a String based upon a whitespace or any other character, for example:
+
+```java
+String myPhrase = new String("Alex is 21");
+String[] mySplittedPhrase = myPhrase.split(" ");
+```
+
+We can also use a complete word to work as a separator, so the characters to the left become a element and the characters to the right become another.
+
+```java
+String[] mySplittedPhrase = myPhrase.split("is");
+```
+
+
+
+> TRIM METHOD
+
+To remove whitespaces at the start and end of a String, we can use `Trim()` method.
+
+```java
+String noSpaces = mySplittedPhrase[0].trim();
+```
+
+
+
+> RETRIEVE CHARS: FOR LOOP
+
+We use `charAt()` method to retrieve elements one by one in a string.
+
+```java
+String myString = new String("Alex is 21");
+for(int i=0; i<s.length(); i++){
+    System.out.println(myString.charAt(i));
+}
+```
+
+
+
+### Methods
+
+> WHY METHODS?
+>
+
+A method is quite useful because it encapsules blocks of code we want to reuse and give it a name.
+
+
+
+> DECLARING A METHOD
+
+A method needs to be declared outside of the main block, that is, outside the  `...args){	}` brackets, so that it isn't automatically executed, but executed 'on demand' instead. For example:
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+
+	}
+	public void getData(){
+        System.out.println("Hola");
+    }
+}
+```
+
+In the example above we created **getData() method** along with **'public' as access modifier, meaning that getData() can be accessed by other classes too**, and setting a 'void' return.
+
+
+
+> ACCESSING METHODS IN MAIN BLOCK (FROM THE SAME CLASS)
+
+As seen in previous examples, **we can't access a method directly, first, we need to create an object of the class the method belongs to**.
+
+For example, to access 'getData()' method, we would need to create an object of the 'BrushUp1' class, and only then access the method, as follows:
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+        BrushUp1 myObject = new BrushUp1();
+        myObject.getData();
+	}
+	public void getData(){
+        System.out.println("Hola");
+    }
+}
+```
+
+In the case our method doesn't have a 'void' return, we would need another variable to store the result, like this:
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+        BrushUp1 myObject = new BrushUp1();			// class object
+        String myUser = myObject.getData();			// variable to store method's return
+        System.out.println(myUser);					// print method's return
+	}
+	public String getData(){
+        System.out.println("Retornando el nombre del usuario:");
+        return "Alex";
+    }
+}
+```
+
+
+
+> METHOD'S ONLY CLASSES
+
+Up until now we've declared methods coexisting with a main block for execution, but that's not necessary if we don't want to. We can also create a **class for methods-only**.
+
+```java
+package alex.appium.project0;
+
+public class methodsOnly {
+	public String getData(){
+        System.out.println("Retornando el nombre del usuario:");
+        return "Alex";
+    }
+}
+```
+
+
+
+> ACCESSING METHODS FROM A DIFFERENT CLASS
+
+Let's assume we need to access <u>getData()</u> method, which belongs to <u>methodsOnly</u> class, from <u>BrushUp1</u> class. In that case, and as mentioned earlier, we need to create an object of the class the method belongs to.
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+        methodsOnly myObject = new methodsOnly();	// class object
+        String myUser = myObject.getData();			// variable to store method's return
+        System.out.println(myUser);					// print method's return
+	}
+}
+```
+
+
+
+> ACCESS A METHOD WITHOUT AN OBJECT: STATIC METHODS
+
+If we don't want to create an object of the class, we need to set our method as `static`.
+
+```java
+public static String getData(){
+}
+```
+
+This means that n**ow the method is referenced to a class (the class it belongs to) and not to an object**.
+
+So, static methods can be called without the need of an object. Being 'static' means that there's only one copy of the method in memory, regardless the amount of objects of the class.
+
+
+
+> STATIC METHODS WITH CLASS LEVEL ACCESS
+
+There are two ways of accessing a static method. The first one is this:
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+        String myUser = getData();
+	}
+    public static String getData(){
+        return "Alex";
+    }
+}
+```
+
+We can see that we only need to write the name of the method and assign its return value to a variable. 
+
+A clear **disadvantage** of this is that they're moved to class level access, meaning that they can't be accesed from other classes.
+
+
+
+> STATIC METHODS: GLOBAL ACCESS
+
+There's a second way to acess a static method, which is done via the class name, like this:
+
+```java
+package alex.appium.project0;
+
+public class BrushUp1 {
+
+	public static void main(String[] args) {
+        String myUser = BrushUp1.getData();
+	}
+    public static String getData(){
+        return "Alex";
+    }
+}
+```
+
+By writing the class name the method belongs to, we ensure the compiler is gonna find it, even if it's in a different class.
+
+### Inheritance
+
+Inheritance is a mechanisms that allows to create a new class from an existing class.
+
+The new class, called a **derived class**, child class or subclass, inherits (gets) the attributes and methods of the original class, called **superclass**, parent class or base class.
+
+This prevents from code duplication and simplifies maintainment.
+
+
+
+> EXAMPLE
+
+Let's say we have:
+
+- Class: Animal
+  - Attributes: nombre, especie, edad
+  - Methods: comer, dormir
+
+```java
+public class Animal {
+
+    private String nombre;
+    private String especie;
+    private int edad;
+
+    public Animal(String nombre, String especie, int edad) {
+        this.nombre = animalName;
+        this.especie = animalSpecies;
+        this.edad = animalAge;
+    }
+
+    public void comer() {
+        System.out.println("El animal está comiendo");
+    }
+
+    public void dormir() {
+        System.out.println("El animal está durmiendo");
+    }
+
+    // ...
+}
+```
+
+(`this` is used to reference the actual object of the class; `.nombre`, `.especie` and `.edad` are access operators to the attribute they mention, and `animalName`, `animalSpecies` and `animalAge` are the values that we're assigning to the attributes - in fact variables with any values -)
+
+
+
+Then, we could create a derived class named Perro which inherits from Animal class.
+
+This subclass will have the methods and attributes defined in Animal class, but can have specific attributes and methods of dogs, like `Raza()` and `Ladrar()` aswell.
+
+Then, we end up with this
+
+- Subclass: Perro
+  - Attributes: nombre, especie, edad, raza
+  - Methods: comer, dormir, ladrar
+
+```java
+public class Perro extends Animal {
+
+    private String raza;
+
+    public Perro(String nombre, String especie, int edad, String raza) {
+        super(nombre, especie, edad);
+        this.raza = dogRace;
+    }
+
+    public void ladrar() {
+        System.out.println("El perro está ladrando");
+    }
+
+    // ...
+}
+```
+
+So **this can be seen as a way to add features using an exsisting class as a base**.
+
+
+
+> SYNTAX TO DEFINE A CHILD CLASS
+
+A child class can be defined this way:
+
+```java
+public class myChildClass extends myParentClass{
+    
+}
+```
+
+
 
 
 
 s
-
-# Arrays
-
-
-
-# Loops and Conditions
-
-
-
-# Strings
-
-
-
-# Arrays lists
-
-
-
-### Array lists operations and conversion of array to list
-
-
-
-# Declaring Methods
-
-
-
-# Accessing Methods in class and Static keyword
-
