@@ -29,6 +29,21 @@ We **won't include selenium dependencies** as of now in the project, these packa
 
 (Note: selenium 4.17.2 was installed and then uninstalled from python, to check that the latest version is 4.17.2)
 
+
+
+# ADD COURSE'S APP TO PROJECT
+
+The first app we'll use is the **myDemo.apk**. To place it into our workspace, we'll follow these steps:
+
+1. Right click on <u>src/test/java</u>
+2. New -> Package
+3. Name the package: in this case, we'll name it resources'
+4. Click on finish
+5. Go to windows explorer and copy <u>myDemo.apk</u> file
+6. Click on the <u>resources</u> package and paste the app with Ctrl + V.
+
+
+
 # UI AUTOMATOR
 
 UIAutomator was designed by Google to facilitate automation. Appium took this tool and came up with UIAutomator2, a modified version of the original framework.
@@ -153,7 +168,7 @@ We'll run this test as testng test, not as a java app anymore, so the shortcut w
    UiAutomator2Options myOptions = new UiAutomator2Options();
    ```
 
-   After that, we'll set the device with `.setDeviceName()` method.
+   After that, we'll set the device with `.setDeviceName()` and `.myOptions.setApp()` methods.
 
    *IMPORTANT*	The **device name must match with the one** we chose when creating our AVD **in Android Studio**. So, for this case, it will be:
 
@@ -161,12 +176,127 @@ We'll run this test as testng test, not as a java app anymore, so the shortcut w
    myOptions.setDeviceName("Pixel 7 Pro API 34");
    ```
 
-   s
+   To find the
+
+   ```java
+   myOptions.setApp
+   ```
 
    s
 
-6. s
+6. So, the whole picture looks like this:
+
+   ```java
+   package alex.appium.project0;
+   
+   import org.testng.annotations.Test;
+   import io.appium.java_client.android.AndroidDriver;
+   import io.appium.java_client.android.options.UiAutomator2Options;
+   import java.net.URL;
+   import java.net.MalformedURLException;
+   
+   public class appiumBasics {
+   	@Test
+   	public void myAppiumTest() throws MalformedURLException {
+   		UiAutomator2Options myOptions = new UiAutomator2Options();
+   		myOptions.setDeviceName("Pixel 7 Pro API 34");
+   		
+   		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
+   	}
+   }
+   ```
 
 
 
-s
+### Start Appium server with object (not via powershell)
+
+> SERVER OBJECT
+
+ Using the code above as a starting point, Appium server can be started with an object of `AppiumServiceBuilder()` class.
+
+```java
+AppiumServiceBuilder myService = new AppiumServiceBuilder();
+```
+
+
+> SERVER OBJECT PARAMETERS
+
+Then, we use `.withAppiumJS()` method to reference the object towards <u>main.js</u>, which is the file that invokes appium server. 
+
+```java
+myService.withAppiumJS(new File("C://Users//Diego//AppData//Roaming//npm//node_modules//appium//build//lib//main.js"));
+```
+
+And then again, we use `.withIPAdress()` method to reference the object to our IP.
+
+```java
+myService.withIPAddress("http://127.0.0.1");
+```
+
+And `.usingPort()` method for our port.
+
+```java
+myService.usingPort(4723);
+```
+
+
+
+Notice how we also needed to create an object of 'File' class, and we didn't simply put the path as a String in  `.withAppiumJS()` method, but we did straightforward wrote the IP as a string in `.withIPAdress()` method, and that's because **every method tell us which data-type they need when we hover the cursor above them**.
+
+NOTE: Java doesn't accept single slashes (/) in paths, they have to be double slashes (//).
+
+
+
+> SERVER BUILD AND START
+
+After setting up the object with the described methods above, we have to create a new object of `AppiumDriverLocalService` class and make use of `.buildService()` and `.start()` methods **to start the server**.
+
+```java
+AppiumDriverLocalService myServer = AppiumDriverLocalService.buildService(myService);
+myServer.start();
+```
+
+The new packages added are:
+
+```java
+import java.io.File;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+```
+
+The whole picture now is:
+
+```java
+package alex.appium.project0;
+
+import org.testng.annotations.Test;
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
+import java.net.URL;
+import java.net.MalformedURLException;
+import java.io.File;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+
+public class appiumBasics {
+	@Test
+	public void myAppiumTest() throws MalformedURLException {
+		AppiumServiceBuilder myService = new AppiumServiceBuilder();
+		myService.withAppiumJS(new File("C://Users//Diego//AppData//Roaming//npm//node_modules//appium//build//lib//main.js"));
+		myService.withIPAddress("http://127.0.0.1:4723");
+		myService.usingPort(4723);
+		
+		AppiumDriverLocalService myServer = AppiumDriverLocalService.buildService(myService);
+        myServer.start();
+
+		UiAutomator2Options myOptions = new UiAutomator2Options();
+		myOptions.setDeviceName("Pixel 7 Pro API 34");
+		
+		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
+	}
+}
+```
+
+
+
+### s
