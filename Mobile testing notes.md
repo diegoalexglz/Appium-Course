@@ -597,12 +597,271 @@ There are pieces of our **code** that are **common to all** our appium **tests**
         // Android object and app (session) startup
 ```
 
+and also the code enclosed here:
+
+```java
+		// App (session) closing and UIAutomator2 disconnection
+		// Appium server closing
+```
+
 
 
 > CREATE A BASE CLASS
 
 To create a base class, we can follow the steps described here: [Create a class](#TESTNG-Basic-class).
 
+All **reusable utilities go into the Base class** (we named it <u>BaseTest.java</u>).
+
+So, we'll create two methods: `setUp()` and `teardown()` which will configure-and-open and close the server, respectively.
+
+**NOTE**
+
+To avoid the '<x> cannot be resolved' error, we must ensure that 'myDriver' and 'myServer' objects are **public**, so they can be accessed from multiple classes. (This is not the correct access modifier, but this will be discused later.)
+
+```java
+public class BaseTest {
+	
+	public AndroidDriver myDriver;
+	public AppiumDriverLocalService myServer;
+    // setUp...
+    // tearDown...
+```
 
 
-Util methods, Child appium tests
+
+Our base class will look like this:
+
+```java
+package alex.appium.project0;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+
+public class BaseTest {
+	
+	public AndroidDriver myDriver;
+	public AppiumDriverLocalService myServer;
+	
+	public void setUp() throws MalformedURLException {
+        // ECLIPSE CODE -> APPIUM SERVER -> ANDROID STUDIO
+		// Appium server config
+		AppiumServiceBuilder myService = new AppiumServiceBuilder();
+		myService.withAppiumJS(new File("C://Users//Diego//AppData//Roaming//npm//node_modules//appium//build//lib//main.js"));
+		myService.withIPAddress("127.0.0.1");
+		myService.usingPort(4723);
+		
+		// Apium server startup
+		AppiumDriverLocalService myServer = AppiumDriverLocalService.buildService(myService);
+        myServer.start();
+
+        // Android object Capabilities (device and app specs)
+		UiAutomator2Options myOptions = new UiAutomator2Options();
+		myOptions.setDeviceName("Pixel 7 Pro API 34");
+        myOptions.setApp("C://Users//Diego//eclipse-workspace//project0//src//test//java//resources//myDemo.apk");
+		
+        // Android object and app (session) startup
+		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
+	}
+	
+	public void tearDown() {
+		// App (session) closing and UIAutomator2 disconnection
+		myDriver.quit();
+		
+		// Appium server closing
+		myServer.stop();
+	}
+
+}
+
+```
+
+
+
+### Inheritance applied to setUp & tearDowm
+
+> AUTOMATIONTEST EXTENDS BASETEST
+
+Back to our automation file (appiumBasics), we need our class to have the attributes and methods of BaseTest, which are:
+
+- Attributes:
+  -  myDriver
+  - myServer
+- Methods:
+  - setUp()
+  - tearDown()
+
+so, **we'll apply inheritance**, in this way:
+
+```java
+public class appiumBasics extends BaseTest{
+```
+
+However, we can't run our file at this point, because we haven't called the setUp and tearDown() methods yet. If we do, we'll get the 'NullPointerException' error.
+
+
+
+So, we'll **call the methods** this way:
+
+```java
+	public void myWifiSettingsTest() throws MalformedURLException {
+		// Start server
+		setUp();
+        // Automation...
+        // Close server
+        tearDown();
+```
+
+And the resulting code is:
+
+```java
+package alex.appium.project0;
+
+import org.testng.annotations.Test;
+import java.net.MalformedURLException;
+import io.appium.java_client.AppiumBy;
+
+
+public class appiumBasics extends BaseTest{
+	@Test
+	public void myWifiSettingsTest() throws MalformedURLException {
+		// Start server
+		setUp();
+		
+        // Actual automation goes here...
+		myDriver.findElement(AppiumBy.accessibilityId("Preference")).click();
+        
+		// Close server
+		tearDown();
+	}
+}
+```
+
+
+
+### TestNG further simplification: before and after class
+
+We've simplified our automation file by applying inheritance, but we can simplify it even further using TestNG.
+
+So, we'll head to BaseTest and add:
+
+```java
+@BeforeClass
+```
+
+which carries this package: `import org.testng.annotations.BeforeClass;`
+
+`@BeforeClass` is an annotation that marks a method that must be executed once before all the other test methods.
+
+
+
+This implies that **we no longer need to call setUp method** in our <u>AppiumBasics</u>, because TestNG automatically searchs for a @BeforeClass in <u>BaseTest</u>.
+
+And, if you hadn't noticed (I hadn't XD), we've always had a @Test in AppiumBasics.
+
+```java
+public class appiumBasics extends BaseTest{
+	@Test
+	public void myWifiSettingsTest(){
+    //...
+```
+
+
+
+Similarly, we can do the same to close the server, using `@AfterClass`, which comes with `import org.testng.annotations.AfterClass;`.
+
+
+
+##### 4th runnable test
+
+Let's see our resulting Automation and BaseTest.
+
+**Appium Basics** (runnable)
+
+When run (Alt Shift X, N), it will open <u>myDemo.apk</u> app in our AVD and click on 'Preferences'.
+
+<u>Success!</u>
+
+```java
+package alex.appium.project0;
+
+import org.testng.annotations.Test;
+import java.net.MalformedURLException;
+import io.appium.java_client.AppiumBy;
+
+
+public class appiumBasics extends BaseTest{
+	@Test
+	public void myWifiSettingsTest() throws MalformedURLException {
+        // Automation goes here...
+		myDriver.findElement(AppiumBy.accessibilityId("Preference")).click();
+        
+	}
+}
+```
+
+**BaseTest**
+
+```java
+package alex.appium.project0;
+
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.android.options.UiAutomator2Options;
+import io.appium.java_client.service.local.AppiumDriverLocalService;
+import io.appium.java_client.service.local.AppiumServiceBuilder;
+
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+
+public class BaseTest {
+	
+	public AndroidDriver myDriver;
+	public AppiumDriverLocalService myServer;
+	
+	@BeforeClass
+	public void setUp() throws MalformedURLException {
+        // ECLIPSE CODE -> APPIUM SERVER -> ANDROID STUDIO
+		// Appium server config
+		AppiumServiceBuilder myService = new AppiumServiceBuilder();
+		myService.withAppiumJS(new File("C://Users//Diego//AppData//Roaming//npm//node_modules//appium//build//lib//main.js"));
+		myService.withIPAddress("127.0.0.1");
+		myService.usingPort(4723);
+		
+		// Apium server startup
+		AppiumDriverLocalService myServer = AppiumDriverLocalService.buildService(myService);
+        myServer.start();
+
+        // Android object Capabilities (device and app specs)
+		UiAutomator2Options myOptions = new UiAutomator2Options();
+		myOptions.setDeviceName("Pixel 7 Pro API 34");
+        myOptions.setApp("C://Users//Diego//eclipse-workspace//project0//src//test//java//resources//myDemo.apk");
+		
+        // Android object and app (session) startup
+		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
+	}
+	
+	@AfterClass
+	public void tearDown() {
+		// App (session) closing and UIAutomator2 disconnection
+		myDriver.quit();
+		
+		// Appium server closing
+		myServer.stop();
+	}
+
+}
+
+```
+
+
+
+, Child appium tests
