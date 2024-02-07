@@ -29,6 +29,18 @@ We **won't include selenium dependencies** as of now in the project, these packa
 
 (Note: selenium 4.17.2 was installed and then uninstalled from python, to check that the latest version is 4.17.2)
 
+### Warning about versions
+
+**Java client** has many **compatibility issues** among its versions 7, 8 and 9 with Java 8 and 11 and the different versions of selenium, aswell of some deprecated items.
+
+To see the compatibility matrix, go to:
+
+https://github.com/appium/java-client/blob/master/README.md
+
+Some useful info about UIAutomator 2 can be found here too:
+
+https://github.com/appium/appium-uiautomator2-driver/blob/master/README.md
+
 
 
 # ADD COURSE'S APP TO PROJECT
@@ -44,7 +56,7 @@ The first app we'll use is the **myDemo.apk**. To place it into our Eclipse's pr
 
 
 
-# UI AUTOMATOR
+# UIAUTOMATOR2
 
 UIAutomator was designed by Google to facilitate automation. Appium took this tool and came up with UIAutomator2, a modified version of the original framework.
 
@@ -80,6 +92,8 @@ UIAutomator was designed by Google to facilitate automation. Appium took this to
    In our case, we installed uiautomator2 version **2.44.0**
 
 
+
+# ECLIPSE + UIAUTOMATOR2
 
 ### TESTNG Basic class
 
@@ -195,7 +209,7 @@ myDriver.quit();
 
 
 
-#### First 'runnable' test
+##### 1st runnable test
 
 At this point, we can execute our first test:
 
@@ -278,7 +292,7 @@ ADB (Android Debug Bridge)
 
 
 
-### Start and Close Appium server with object (not via powershell)
+### Start/Close Appium server with object (not via powershell)
 
 > SERVER OBJECT
 
@@ -346,7 +360,7 @@ myServer.close();
 
 
 
-#### Second 'runnable' test
+##### 2nd runnable test
 
 At this point, we only need to:
 
@@ -378,7 +392,7 @@ public class appiumBasics {
 		// Appium server config
 		AppiumServiceBuilder myService = new AppiumServiceBuilder();
 		myService.withAppiumJS(new File("C://Users//Diego//AppData//Roaming//npm//node_modules//appium//build//lib//main.js"));
-		myService.withIPAddress("http://127.0.0.1:4723");
+		myService.withIPAddress("127.0.0.1");
 		myService.usingPort(4723);
 		
 		// Apium server startup
@@ -393,13 +407,13 @@ public class appiumBasics {
         // Android object and app (session) startup
 		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
 		
+        // Actual automation goes here...
+        
 		// App (session) closing and UIAutomator2 disconnection
 		myDriver.quit();
 		
 		// Appium server closing
 		myServer.stop();
-        
-        // Actual automation goes here...
 	}
 }
 ```
@@ -412,12 +426,183 @@ With this, we've finished the part of 'One time effort'. Next, comes the automat
 
 
 
+<u>Success!</u>
+
+
+
 # APPIUM INSPECTOR
 
 **To select (click) an item of an app, we need to know its properties**, so we can define the type of locator we should use (Xpath, id, accessibilityId, classname or androidUIAutomator). To this purpose, there is <u>Appium inspector</u>.
 
+Appium inspector is a cross-platform tool, it works for both android and ¡os.
+
 ### Installation
 
-1. Go to 
+1. Go to the releases page: https://github.com/appium/appium-inspector/releases
+2. Download .exe from assets. In this case, we're downloading <u>Inspector version 2023.12.2</u>
+3. Install
 
-s
+### Config
+
+Similar to the config needed to send our eclipse code to the emulator, inspector also needs info to know which emulator and which screen we want to scan for properties.
+
+
+
+1. Open Inspector
+2. **Host and port:**
+   - Host: 127.0.0.1
+   - Port: 4723
+3. **Desired capabilities:** Introduce the following (use '+' button to add more fields).
+
+<table style="width: 100%; text-align: center; vertical-align: middle; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th width="50%">Name</th>
+            <th width="50%">Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>app</td>
+            <td>C://Users//Diego//eclipse-workspace//project0//src//test//java//resources//myDemo.apk
+            </td>
+        </tr>
+        <tr>
+            <td>deviceName</td>
+            <td>Pixel 7 Pro API 34
+            </td>
+        </tr>
+        <tr>
+            <td>platformName</td>
+            <td>android
+            </td>
+        </tr>
+        <tr>
+            <td>automationName</td>
+            <td>UIAutomator2
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+   We'll get this JSON representation at the right:
+
+```json
+{
+  "app": "C://Users//Diego//eclipse-workspace//project0//src//test//java//resources//myDemo.apk",
+  "deviceName": "Pixel 7 Pro API 34",
+  "platformName": "android",
+  "automationName": "UIAutomator2"
+}
+```
+
+3. Start appium via powershell
+4. Open Android studio and run AVD
+5. Click on <u>Start Session</u>
+
+We should see this:
+
+<img src="images/im_02.png" width="800" style="float: left;">
+
+### Inspect elements
+
+Let's assume we want the propierties of 'Preference'. Then,
+
+1. Click on 'Preference'
+2. Copy one of the selector values of the <u>Find By</u> table in the <u>Selected element</u> tab.
+
+
+
+# ECLIPSE + INSPECTOR
+
+While having our three apps open (Eclipse, Inspector and Android Studio), we can start <u>Actual Automation</u> using `.FindElement()` method.
+
+**NOTE** There's a 'catch' here:
+
+- <u>By.</u> is generic (web and mobile; it comes from selenium)
+- <u>AppiumBy.</u> is exclusive for appium (mobile)
+
+So, we have to make a clarification with the use of locators:
+
+<table style="width: 100%; text-align: center; vertical-align: middle; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th width="50%">Locator</th>
+            <th width="50%">Can be used by</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Xpath<br>
+                id<br>
+                classname
+            </td>
+            <td>appium, selenium (By.)
+            </td>
+        </tr>
+        <tr>
+            <td>accessibilityId<br>
+                androidUIAutomator
+            </td>
+            <td>appium only (AppiumBy.)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+### Click on an element
+
+In this example, we wanna click on 'Preference' via accessibilityId. So we use `.click` method.
+
+Notice how we need to <u>find the element and click on it in the same line of code</u>.
+
+- **Correct form** Find-and-click
+
+```java
+myDriver.findElement(AppiumBy.accessibilityId("Preference")).click();
+```
+
+- **Incorrect form** Find-then-click
+
+```java
+myDriver.findElement(AppiumBy.accessibilityId("Preference"));
+myDriver.click();
+```
+
+(this carries `import io.appium.java_client.AppiumBy;`)
+
+##### 3rd runnable test
+
+When run (Alt Shift X, N), it will open <u>myDemo.apk</u> app in our AVD and click on 'Preferences'.
+
+<u>Success!</u>
+
+**NOTE**
+
+There's no need to close the Inspector session to run the test.
+
+
+
+# BASE CLASS
+
+There are pieces of our **code** that are **common to all** our appium **tests**. In our case, all code enclosed between these comments are a <u>must for our tests</u>, since they configure the server and the AVD
+
+```java
+        // ECLIPSE CODE -> APPIUM SERVER -> ANDROID STUDIO
+		// Appium server config
+		// Apium server startup
+        // Android object Capabilities (device and app specs)
+        // Android object and app (session) startup
+```
+
+
+
+> CREATE A BASE CLASS
+
+To create a base class, we can follow the steps described here: [Create a class](#TESTNG-Basic-class).
+
+
+
+Util methods, Child appium tests
