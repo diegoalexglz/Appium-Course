@@ -176,3 +176,24 @@ Let's analyze some cases:
 - <u>R8</u>: Same happens here, either you are a new or a regular customer, you must be one of them.
 
 Finally, we go and check what's the actual app output for both valid and invalid cases and see what it returns.
+
+
+
+# STATE TRANSITION
+
+It consists in testing different states of a process.
+
+> EXAMPLE
+
+We've got a requirement that states that if an users enters a wrong password for the third consecutive time, his account will be blocked.
+
+So, we create a diagram to illustrate the process.
+
+<img src="images/im_13.png" width="600" style="float: left;">
+
+
+
+Our test cases should be designed to check the output at every stage of the login, that is: 1st attempt, 2nd attempt and 3rd attempt, being the only two options in every case a correct or an incorrect password.
+
+And we've formed 6 test cases.
+
