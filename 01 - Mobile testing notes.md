@@ -627,9 +627,25 @@ public class BaseTest {
     // tearDown...
 ```
 
+By initializing our objects this way, the later definitions will have a small change, too.
 
 
-Our base class will look like this:
+
+From this:
+
+- `AndroidDriver myDriver = new AndroidDriver...;`
+
+- `AppiumDriverLocalService myServer = Appium...;`
+
+to this:
+
+- `myDriver = new AndroidDriver...;`
+
+- `myServer = Appium...;`
+
+
+
+So, our base class will look like this:
 
 ```java
 package alex.appium.project0;
@@ -657,7 +673,7 @@ public class BaseTest {
 		myService.usingPort(4723);
 		
 		// Apium server startup
-		AppiumDriverLocalService myServer = AppiumDriverLocalService.buildService(myService);
+		myServer = AppiumDriverLocalService.buildService(myService);
         myServer.start();
 
         // Android object Capabilities (device and app specs)
@@ -666,7 +682,7 @@ public class BaseTest {
         myOptions.setApp("C://Users//Diego//eclipse-workspace//project0//src//test//java//resources//myDemo.apk");
 		
         // Android object and app (session) startup
-		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
+		myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
 	}
 	
 	public void tearDown() {
@@ -785,8 +801,6 @@ Let's see our resulting Automation and BaseTest.
 
 When run (Alt Shift X, N), it will open <u>myDemo.apk</u> app in our AVD and click on 'Preferences'.
 
-<u>Success!</u>
-
 ```java
 package alex.appium.project0;
 
@@ -837,7 +851,7 @@ public class BaseTest {
 		myService.usingPort(4723);
 		
 		// Apium server startup
-		AppiumDriverLocalService myServer = AppiumDriverLocalService.buildService(myService);
+		myServer = AppiumDriverLocalService.buildService(myService);
         myServer.start();
 
         // Android object Capabilities (device and app specs)
@@ -846,7 +860,7 @@ public class BaseTest {
         myOptions.setApp("C://Users//Diego//eclipse-workspace//project0//src//test//java//resources//myDemo.apk");
 		
         // Android object and app (session) startup
-		AndroidDriver myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
+		myDriver = new AndroidDriver(new URL("http://127.0.0.1:4723"), myOptions);
 	}
 	
 	@AfterClass
@@ -862,6 +876,48 @@ public class BaseTest {
 
 ```
 
+<u>Success!</u>
+
+**NOTE**
+
+This can be run even if the appium port has been opened via powershell and we've got an inspector session simultaneously, however, we'll get this logs:
+
+- Could not start REST http interface listener. The requested port may already be in use. Please make sure there is no other instance of this server running already.
+
+- Could not configure Appium server. It's possible that a driver or plugin tried to update the server and failed. Original error: listen EADDRINUSE: address already in use 127.0.0.1:4723
+
+- Error: listen EADDRINUSE: address already in use 127.0.0.1:4723
 
 
-, Child appium tests
+
+##### Passes, failures and skips logs
+
+<table style="width: 100%; text-align: center; vertical-align: middle; border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th width="30%">Log</th>
+            <th width="70%">Meaning</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Pass 
+            </td>
+            <td>A "Pass" means that the test case has been executed successfully and produced the expected result.
+            </td>
+        </tr>
+        <tr>
+            <td>Skip
+            </td>
+            <td>A "skip" indicates that a test has not been executed, due to conditions not met (test may have predefined conditions that must be met to run), configuration errors, or non-relevant tests (to the current version of the application or device).
+            </td>
+        </tr>
+        <tr>
+            <td>Failure
+            </td>
+            <td>A "Failure" indicates that the test case was not executed successfully and did not produce the expected result. This could be due to bugs in the application or flaws in the test logic.
+            </td>
+        </tr>
+    </tbody>
+</table>
+
