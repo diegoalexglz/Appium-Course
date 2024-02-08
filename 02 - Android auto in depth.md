@@ -303,3 +303,8 @@ public class BaseTest {
 ```
 
 <u>Success!</u>
+
+
+
+# EXTRACT TEXT FROM MOBILE APP
+
